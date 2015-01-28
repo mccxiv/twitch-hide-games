@@ -4,11 +4,13 @@
   "name": "Twitch Hide Games",
   "description": "Hide games you don't care about when browsing streams on the Twitch website",
   "permissions": ["storage"],
-  "content_scripts": [
-    {
+  "content_scripts": [{
       "matches": ["*://*.twitch.tv/directory/all"],
-      "css": ["hide.css"],
-      "js": ["jquery.min.js", "hide.js"]
-    }
-  ]
+      "css": ["hider.css"],
+      "js": ["jquery.min.js", "blacklist.js", "hider.js"]
+  }],
+  "page_action": {
+    "default_title": "Manage game blacklist",
+    "default_popup": "popup.html"
+  }
 }
