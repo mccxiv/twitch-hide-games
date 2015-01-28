@@ -1,19 +1,26 @@
 
+// Caching because chrome's storage is async...
 var blacklistCache;
 
-// create an observer instance
-var observer = new MutationObserver(function()
-{
-	addHideButtons();
-	if (blacklistCache) hideBlacklisted(blacklistCache);
-});
+init();
 
-observer.observe(document, {childList: true, subtree: true});
-
-blacklist(function(list)
+function init()
 {
-	blacklistCache = list;
-});
+	// Watch the DOM for changes
+	var observer = new MutationObserver(function()
+	{
+		addHideButtons();
+		if (blacklistCache) hideBlacklisted(blacklistCache);
+	});
+
+	observer.observe(document, {childList: true, subtree: true});
+
+	blacklist(function(list)
+	{
+		blacklistCache = list;
+		hideBlacklisted(list);
+	});
+}
 
 function blacklist(arg1, arg2)
 {
@@ -24,9 +31,7 @@ function blacklist(arg1, arg2)
 		{
 			var blacklist = list || [];
 			blacklist.push(arg1);
-			blacklist = blacklist.sort().filter(function(element, index, array) {
-				return element !== array[index - 1]
-			});
+			blacklist = unique(blacklist);
 			console.log('BLACKLIST', blacklist);
 			storageSet('blacklist', blacklist);
 			hideBlacklisted(blacklist);
@@ -46,6 +51,15 @@ function hideBlacklisted(blacklist)
 			$(element).closest('.stream').hide();
 		});
 	});
+
+	triggerScroll();
+}
+
+function triggerScroll()
+{
+	var evt = document.createEvent("UIEvents");
+	evt.initEvent('scroll', true, true); // event type,bubbling,cancelable
+	$('.streams').get(0).dispatchEvent(evt);
 }
 
 function addHideButtons()
@@ -83,5 +97,17 @@ function storageGet(key, cb)
 	chrome.storage.sync.get(key, function(result)
 	{
 		cb(result[key])
+	});
+}
+
+/**
+ * Returns a copy of array with duplicates removed
+ * @param array {Array}
+ * @returns {Array}
+ */
+function unique(array)
+{
+	return array.sort().filter(function(element, index, array) {
+		return element !== array[index - 1]
 	});
 }
