@@ -5,17 +5,23 @@
   "description": "Hide games you don't care about when browsing streams on the Twitch website",
   "permissions": ["storage"],
   "content_scripts": [{
-      "matches": ["*://*.twitch.tv/directory/all"],
+      "matches": ["*://*.twitch.tv/*"],
       "css": ["hider.css"],
       "js": ["jquery.min.js", "blacklist.js", "hider.js"]
   }],
+  "icons": {
+    "16": "icons/i16.png",
+    "48": "icons/i48.png",
+    "128": "icons/i128.png"
+  },
   "background": {
     "scripts": ["background.js"],
     "persistent": false
   },
   "page_action": {
     "default_icon": {
-      "38": "thg38.png"
+      "19": "icons/i19.png",
+      "38": "icons/i38.png"
     },
     "default_title": "Manage game blacklist",
     "default_popup": "popup.html"

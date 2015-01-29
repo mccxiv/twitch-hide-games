@@ -14,20 +14,20 @@ function blacklist(arg1, arg2)
 	});
 }
 
-function unBlackList(game)
+function unBlacklist(game, cb)
 {
 	blacklist(function(list)
 	{
 		list.splice(list.indexOf(game), 1);
-		storageSet('blacklist', list);
+		storageSet('blacklist', list, cb);
 	});
 }
 
-function storageSet(key, value)
+function storageSet(key, value, cb)
 {
 	var obj = {};
 	obj[key] = value;
-	chrome.storage.sync.set(obj);
+	chrome.storage.sync.set(obj, cb);
 }
 
 function storageGet(key, cb)

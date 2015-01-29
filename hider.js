@@ -1,16 +1,29 @@
-
-// Caching because chrome's storage is async...
-var blacklistCache;
-
-init();
-
 function init()
 {
 	// Watch the DOM for changes
 	var observer = new MutationObserver(function()
 	{
-		addHideButtons();
-		if (blacklistCache) hideBlacklisted(blacklistCache);
+		if ($('.streams').length)
+		{
+			addHideButtons();
+			if (blacklistCache) hideBlacklisted(blacklistCache);
+			if (!iconShown)
+			{
+				console.log('SHOWING ICON');
+				iconShown = true;
+				chrome.runtime.sendMessage({action: 'showPageAction'});
+			}
+		}
+
+		else
+		{
+			if (iconShown)
+			{
+				console.log('HIDING ICON');
+				iconShown = false;
+				chrome.runtime.sendMessage({action: 'hidePageAction'});
+			}
+		}
 	});
 
 	observer.observe(document, {childList: true, subtree: true});
@@ -21,18 +34,24 @@ function init()
 		hideBlacklisted(list);
 	});
 
-	chrome.runtime.sendMessage({showPageAction: true});
+	chrome.runtime.onMessage.addListener(function(request)
+	{
+		if (request.action === 'unHide')
+		{
+			getStreamDom(request.game).fadeIn();
+			blacklist(function(list)
+			{
+				blacklistCache = list;
+			});
+		}
+	});
 }
 
 function hideBlacklisted(blacklist)
 {
 	blacklist.forEach(function(game)
 	{
-		var selector = 'a.boxart[title="'+game+'"], a.boxart[original-title="'+game+'"]';
-		$(selector).each(function(i, element)
-		{
-			$(element).closest('.stream').hide();
-		});
+		getStreamDom(game).hide();
 	});
 
 	triggerScroll();
@@ -67,3 +86,15 @@ function blacklistFromButton(event)
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
+
+function getStreamDom(game)
+{
+	var boxart = 'a.boxart[title="'+game+'"], a.boxart[original-title="'+game+'"]';
+	return $(boxart).closest('.stream');
+}
+
+// Caching because chrome's storage is async...
+var blacklistCache;
+var iconShown = false;
+
+init();

@@ -13,6 +13,14 @@ blacklist(function(list)
 $(document).on('click', '.game', function(e)
 {
 	var game = $(e.target).data('game');
-	unBlackList(game);
 	$(e.target).fadeOut();
+	unBlacklist(game, function()
+	{
+		unHide(game);
+	});
 });
+
+function unHide(game)
+{
+	chrome.runtime.sendMessage({action: 'unHide', game: game});
+}

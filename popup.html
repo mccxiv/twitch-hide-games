@@ -3,13 +3,39 @@
 <head>
 	<title>Twitch Hide Games</title>
 	<style>
+		html, body
+		{
+			margin: 0;
+			padding: 0;
+		}
+
 		body
 		{
 			font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
 			font-size: 100%;
-			max-width: 400px;
+			width: 275px;
 			max-height: 600px;
 
+		}
+
+		.toolbar
+		{
+			line-height: 40px;
+			padding-left: 15px;
+			background-color: #8168bb;
+			color: white;
+		}
+
+		.title
+		{
+			font-size: 18px;
+			font-weight: bolder;
+			margin-right: 15px;
+		}
+
+		.list
+		{
+			padding: 15px;
 		}
 
 		.game
@@ -18,10 +44,21 @@
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			overflow-x: hidden;
+			cursor: pointer;
 		}
+
+		.game:hover
+		{
+			background-color: #e6d5ff;
+		}
+
 	</style>
 </head>
 <body>
+	<div class="toolbar">
+		<span class="title">THG</span>
+		<span>click to unhide</span>
+	</div>
 	<div class="list"></div>
 	<script src="jquery.min.js"></script>
 	<script src="blacklist.js"></script>
