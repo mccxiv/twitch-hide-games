@@ -16,7 +16,11 @@ function blacklist(arg1, arg2)
 
 function unBlackList(game)
 {
-	console.log('unblacklist NYI');
+	blacklist(function(list)
+	{
+		list.splice(list.indexOf(game), 1);
+		storageSet('blacklist', list);
+	});
 }
 
 function storageSet(key, value)

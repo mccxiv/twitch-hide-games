@@ -20,6 +20,8 @@ function init()
 		blacklistCache = list;
 		hideBlacklisted(list);
 	});
+
+	chrome.runtime.sendMessage({showPageAction: true});
 }
 
 function hideBlacklisted(blacklist)
@@ -65,5 +67,3 @@ function blacklistFromButton(event)
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
-
-//chrome.pageAction.show()

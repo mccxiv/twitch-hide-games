@@ -9,6 +9,10 @@
       "css": ["hider.css"],
       "js": ["jquery.min.js", "blacklist.js", "hider.js"]
   }],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
   "page_action": {
     "default_icon": {
       "38": "thg38.png"
