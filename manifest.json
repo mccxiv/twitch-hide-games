@@ -10,6 +10,9 @@
       "js": ["jquery.min.js", "blacklist.js", "hider.js"]
   }],
   "page_action": {
+    "default_icon": {
+      "38": "thg38.png"
+    },
     "default_title": "Manage game blacklist",
     "default_popup": "popup.html"
   }

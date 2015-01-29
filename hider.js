@@ -36,11 +36,12 @@ function hideBlacklisted(blacklist)
 	triggerScroll();
 }
 
+// because if there are too few games after filtering it won't trigger ajax for more
 function triggerScroll()
 {
 	var evt = document.createEvent("UIEvents");
-	evt.initEvent('scroll', true, true); // event type,bubbling,cancelable
-	$('.streams').get(0).dispatchEvent(evt);
+	evt.initEvent('scroll', true, true); // event type, bubbling, cancelable
+	$('.streams').each(function(e, el) {el.dispatchEvent(evt)});
 }
 
 function addHideButtons()
@@ -64,3 +65,5 @@ function blacklistFromButton(event)
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
+
+//chrome.pageAction.show()
