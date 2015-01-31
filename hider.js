@@ -1,63 +1,104 @@
+var blacklistCache;
+var disabledCache;
+var isIconShown;
+
 function init()
 {
-	// Watch the DOM for changes
-	var observer = new MutationObserver(function()
+	onSettingsUpdate(function()
 	{
-		if ($('.streams').length)
-		{
-			addHideButtons();
-			if (blacklistCache) hideBlacklisted(blacklistCache);
-			if (!iconShown)
-			{
-				console.log('SHOWING ICON');
-				iconShown = true;
-				chrome.runtime.sendMessage({action: 'showPageAction'});
-			}
-		}
-
-		else
-		{
-			if (iconShown)
-			{
-				console.log('HIDING ICON');
-				iconShown = false;
-				chrome.runtime.sendMessage({action: 'hidePageAction'});
-			}
-		}
+		updateCaches(processBlacklist);
 	});
 
-	observer.observe(document, {childList: true, subtree: true});
+	updateCaches(function()
+	{
+		var observer = new MutationObserver(domChangeHandler);
+		observer.observe(document, {childList: true, subtree: true});
+	})
+}
 
+function onSettingsUpdate(handler)
+{
+	chrome.runtime.onMessage.addListener(function(request)
+	{
+		if (request.settingsUpdated)
+		{
+			handler();
+		}
+	});
+}
+
+function domChangeHandler()
+{
+	if (pageHasStreamsOrGames())
+	{
+		processBlacklist();
+		showPageAction();
+	}
+
+	else
+	{
+		hidePageAction();
+	}
+}
+
+function showPageAction()
+{
+	if (!isIconShown)
+	{
+		isIconShown = true;
+		chrome.runtime.sendMessage({action: 'showPageAction'});
+	}
+}
+
+function hidePageAction()
+{
+	if (isIconShown)
+	{
+		isIconShown = false;
+		chrome.runtime.sendMessage({action: 'hidePageAction'});
+	}
+}
+
+function updateCaches(cb)
+{
 	blacklist(function(list)
 	{
 		blacklistCache = list;
-		hideBlacklisted(list);
-	});
-
-	chrome.runtime.onMessage.addListener(function(request)
-	{
-		if (request.action === 'unHide')
+		storageGet('disabled', function(disabled)
 		{
-			getStreamDom(request.game).fadeIn();
-			blacklist(function(list)
-			{
-				blacklistCache = list;
-			});
-		}
-	});
+			disabledCache = disabled;
+			if (cb) cb();
+		})
+	})
 }
 
-function hideBlacklisted(blacklist)
+function pageHasStreamsOrGames()
 {
-	blacklist.forEach(function(game)
-	{
-		getStreamDom(game).hide();
-	});
-
-	triggerScroll();
+	return $('.game.item').length > 0 || $('.stream').length > 0;
 }
 
-// because if there are too few games after filtering it won't trigger ajax for more
+function processBlacklist()
+{
+	$('.stream').show();
+	$('.game.item').show();
+	if (disabledCache)
+	{
+		$('.thg-hide-button').hide();
+	}
+	else
+	{
+		$('.thg-hide-button').show();
+		addHideButtons();
+		blacklistCache.forEach(function(game)
+		{
+			getStreams(game).hide();
+			getGames(game).hide()
+		});
+		triggerScroll();
+	}
+}
+
+// because if there are too few games after filtering it won't trigger ajax and load more
 function triggerScroll()
 {
 	var evt = document.createEvent("UIEvents");
@@ -71,30 +112,45 @@ function addHideButtons()
 	{
 		var closeButton = $('<div class="thg-hide-button">');
 		$(boxart).addClass('thg-processed').append(closeButton);
-		closeButton.on('click', blacklistFromButton);
+		closeButton.on('click', blacklistFromButton); // todo change to generic event
 	});
 }
 
 function blacklistFromButton(event)
 {
-	var game = $(event.currentTarget).closest('a').attr('original-title');
+	var gameA = $(event.currentTarget).closest('a');
+	var game = gameA.attr('original-title') || gameA.attr('title');
+
+	console.log('GAME CLICKED:', game);
+
 	blacklist(game, function(list)
 	{
 		blacklistCache = list;
-		hideBlacklisted(list);
+		processBlacklist();
 	});
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
 
-function getStreamDom(game)
+// returns stream dom elements that are candidates
+// for applying the blacklist (i.e. excludes followed)
+function getStreams(game)
 {
 	var boxart = 'a.boxart[title="'+game+'"], a.boxart[original-title="'+game+'"]';
-	return $(boxart).closest('.stream');
+	var streams = $(boxart).closest('.stream');
+	return streams.filter(function()
+	{
+		// if it has [data-tt_medium] then it's a stream in the followers page, do not return it
+		return $(this).find('a[data-tt_medium]').length === 0;
+	});
 }
 
-// Caching because chrome's storage is async...
-var blacklistCache;
-var iconShown = false;
+// returns game dom elements that are candidates
+// for applying the blacklist (i.e. excludes followed)
+function getGames(game)
+{
+	var gameSelector = 'a.game-item[title="'+game+'"]:not([data-tt_medium])';
+	return $(gameSelector).closest('.game.item');
+}
 
 init();

@@ -16,7 +16,7 @@
 	border-right: none;
 }
 
-.thumb:hover .thg-hide-button
+.stream:hover .thg-hide-button, .game:hover .thg-hide-button
 {
 	opacity: 1;
 }

@@ -13,9 +13,8 @@
 		{
 			font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
 			font-size: 100%;
-			width: 275px;
+			width: 325px;
 			max-height: 600px;
-
 		}
 
 		.toolbar
@@ -26,6 +25,11 @@
 			color: white;
 		}
 
+		.small
+		{
+			font-size: 12px;
+		}
+
 		.title
 		{
 			font-size: 18px;
@@ -33,9 +37,14 @@
 			margin-right: 15px;
 		}
 
-		.list
+		.content
 		{
 			padding: 15px;
+		}
+
+		input[type=checkbox]
+		{
+			vertical-align: -2px;
 		}
 
 		.game
@@ -45,6 +54,7 @@
 			text-overflow: ellipsis;
 			overflow-x: hidden;
 			cursor: pointer;
+			padding-left: 5px;
 		}
 
 		.game:hover
@@ -52,14 +62,63 @@
 			background-color: #e6d5ff;
 		}
 
+		.nothing-blacklisted-msg
+		{
+			display: none;
+			font-style: italic;
+		}
+
+		.blacklist-empty .instructions
+		{
+			display: none;
+		}
+
+		.blacklist-empty .nothing-blacklisted-msg
+		{
+			display: block;
+		}
+
+		h4
+		{
+			font-size: 16px;
+			margin: 20px 0 0;
+			border-bottom: 1px solid #e1e1e1;
+		}
+
+		h4:first-child
+		{
+			margin-top: 0;
+		}
+
 	</style>
 </head>
 <body>
 	<div class="toolbar">
-		<span class="title">THG</span>
-		<span>click to unhide</span>
+		<span class="title">Twitch Hide Games</span>
+		<span class="small"></span>
 	</div>
-	<div class="list"></div>
+	<div class="content">
+		<h4>Settings</h4>
+		<div class="options">
+			<label><input type="checkbox" class="disabled-checkbox">Disable blacklist</label>
+		</div>
+
+		<h4>Blacklist - click to remove</h4>
+		<div class="list">
+			<div class="nothing-blacklisted-msg">
+				<p>You haven't blacklisted any games.</p>
+			</div>
+		</div>
+
+		<h4>THG v. <span class="version"></span></h4>
+		<div class="info">
+			<a target="_blank" href="">store page</a> -
+			<a target="_blank" href="">github</a> -
+			<a target="_blank" href="">bugs?</a> -
+			<a target="_blank" href="">donate</a>
+		</div>
+	</div>
+
 	<script src="jquery.min.js"></script>
 	<script src="blacklist.js"></script>
 	<script src="popup.js"></script>
