@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "version": "0.0.2",
   "name": "Twitch Hide Games",
-  "description": "Hide games you don't care about when browsing streams on the Twitch website",
+  "description": "Hide games you don't care about",
   "permissions": ["storage"],
   "content_scripts": [{
       "matches": ["*://*.twitch.tv/*"],
