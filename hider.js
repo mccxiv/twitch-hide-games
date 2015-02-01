@@ -74,7 +74,7 @@ function updateCaches(cb)
 
 function pageHasStreamsOrGames()
 {
-	return $('.game.item').length > 0 || $('.stream').length > 0;
+	return $('.game.item').length > 0 || $('.stream.item').length > 0;
 }
 
 function processBlacklist()
