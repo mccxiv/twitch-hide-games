@@ -1,7 +1,7 @@
 #Twitch hide games
 Hide games you don't care about when browsing streams on the Twitch website.
 
-### Chrome Web Store blurb
+### Description
 
 Tired of scrolling through dozens of streams of LoL, Dota, WoW, Hearthstone, etc. when you already know you're not interested?
 
@@ -11,6 +11,6 @@ Simply hover a game and click the close button, it won't show up again until you
 
 Source code: [https://github.com/mccxiv/twitch-hide-games](https://github.com/mccxiv/twitch-hide-games)
 
-### Chrome Web Store screenshots
+### Screenshots
 ![](/webstore/screenshot_1.png?raw=true)
 ![](/webstore/screenshot_2.png?raw=true)
