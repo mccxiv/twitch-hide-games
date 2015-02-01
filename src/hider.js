@@ -74,7 +74,7 @@ function updateCaches(cb)
 
 function pageHasStreamsOrGames()
 {
-	return $('.game.item').length > 0 || $('.stream.item').length > 0;
+	return getStreams().length > 0 || getGames().length > 0;
 }
 
 function processBlacklist()
@@ -132,12 +132,18 @@ function blacklistFromButton(event)
 	event.preventDefault();
 }
 
-// returns stream dom elements that are candidates
-// for applying the blacklist (i.e. excludes followed)
+/**
+ * Get stream elements that are candidates for blacklisting
+ * That is, excludes streams the user is following
+ *
+ * @param {string} [game] - No game means return all
+ * @returns {jQuery}
+ */
 function getStreams(game)
 {
-	var boxart = 'a.boxart[title="'+game+'"], a.boxart[original-title="'+game+'"]';
-	var streams = $(boxart).closest('.stream');
+	var selector = 'a.boxart';
+	if (game) selector = 'a.boxart[title="'+game+'"], a.boxart[original-title="'+game+'"]';
+	var streams = $(selector).closest('.stream');
 	return streams.filter(function()
 	{
 		// if it has [data-tt_medium] then it's a stream in the followers page, do not return it
@@ -145,12 +151,18 @@ function getStreams(game)
 	});
 }
 
-// returns game dom elements that are candidates
-// for applying the blacklist (i.e. excludes followed)
+/**
+ * Get game elements that are candidates for blacklisting
+ * That is, excludes games the user is following
+ *
+ * @param {string} [game] - No game means return all
+ * @returns {jQuery}
+ */
 function getGames(game)
 {
-	var gameSelector = 'a.game-item[title="'+game+'"]:not([data-tt_medium])';
-	return $(gameSelector).closest('.game.item');
+	var selector = 'a.game-item:not([data-tt_medium])';
+	if (game) selector = 'a.game-item[title="'+game+'"]:not([data-tt_medium])';
+	return $(selector).closest('.game.item');
 }
 
 init();
