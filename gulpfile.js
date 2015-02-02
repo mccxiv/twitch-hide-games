@@ -4,7 +4,7 @@ var clean = require('gulp-clean');
 
 gulp.task('make-zip', ['clean-dist'], function()
 {
-	return gulp.src('src/*')
+	return gulp.src('src/**')
 		.pipe(zip('dist_store.zip'))
 		.pipe(gulp.dest('dist'));
 });
