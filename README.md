@@ -1,5 +1,5 @@
 #Twitch hide games
-Hide games you don't care about when browsing streams on the Twitch website.
+Hide games you don't care about when browsing streams on the Twitch website.  
 [Chrome Web Store link](https://chrome.google.com/webstore/detail/twitch-hide-games/habgpamphmkadppfkmocmlolkdoacdda)
 
 ### Description
