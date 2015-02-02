@@ -77,11 +77,22 @@ function pageHasStreamsOrGames()
 	return getStreams().length > 0 || getGames().length > 0;
 }
 
+/**
+ * Current page looks like a "Game" page
+ * that matches an item in the blacklist
+ * @return {boolean}
+ */
+function pageIsBlacklistedGame()
+{
+	var pageTitle = $('.directory_header h2').first().clone().children().remove().end().text().trim();
+	return $.inArray(pageTitle, blacklistCache) !== -1;
+}
+
 function processBlacklist()
 {
-	$('.stream').show();
+	$('.stream.item').show();
 	$('.game.item').show();
-	if (disabledCache)
+	if (disabledCache || pageIsBlacklistedGame())
 	{
 		$('.thg-hide-button').hide();
 	}
@@ -120,9 +131,6 @@ function blacklistFromButton(event)
 {
 	var gameA = $(event.currentTarget).closest('a');
 	var game = gameA.attr('original-title') || gameA.attr('title');
-
-	console.log('GAME CLICKED:', game);
-
 	blacklist(game, function(list)
 	{
 		blacklistCache = list;
