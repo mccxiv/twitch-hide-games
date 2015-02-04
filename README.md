@@ -1,6 +1,8 @@
 #Twitch hide games
 Hide games you don't care about when browsing streams on the Twitch website.  
 [Chrome Web Store link](https://chrome.google.com/webstore/detail/twitch-hide-games/habgpamphmkadppfkmocmlolkdoacdda)
+**Note:** someone beat me to it and released an extension that does performs the same task, a day before me.
+I'll leave this one as "unlisted" in the store. I won't be maintaining this project but it was a learning experience
 
 ### Description
 
